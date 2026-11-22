@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cardápio</title>
+  <meta name="description" content="Cardápio online: monte seu pedido e envie direto pelo WhatsApp.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#141110">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <a class="pular" href="#cardapio">Pular para o cardápio</a>
+
+  <header class="hero" id="topo">
+    <div class="hero__capa" aria-hidden="true"></div>
+    <div class="hero__conteudo wrap">
+      <div class="hero__logo" id="logo"></div>
+      <div>
+        <h1 class="hero__nome" id="nome-loja"></h1>
+        <p class="hero__slogan" id="slogan"></p>
+      </div>
+      <ul class="chips" id="chips"></ul>
+    </div>
+  </header>
+
+  <main id="cardapio">
+    <section class="destaques wrap" id="destaques-wrap" hidden>
+      <h2 class="titulo-secao">Os mais pedidos</h2>
+      <div class="destaques__trilho" id="destaques"></div>
+    </section>
+
+    <nav class="cats" id="cats-nav" aria-label="Categorias">
+      <div class="cats__inner wrap">
+        <label class="busca">
+          <span class="sr">Buscar no cardápio</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="busca" placeholder="Buscar" autocomplete="off">
+        </label>
+        <div class="cats__lista" id="cats"></div>
+      </div>
+    </nav>
+
+    <div class="wrap" id="secoes"></div>
+    <p class="wrap vazio" id="sem-resultado" hidden>Nada encontrado com esse nome.</p>
+  </main>
+
+  <footer class="rodape wrap" id="rodape"></footer>
+
+  <button class="sacola-barra" id="sacola-barra" type="button" hidden>
+    <span class="sacola-barra__qtd" id="sacola-qtd">0</span>
+    <span>Ver sacola</span>
+    <strong id="sacola-total">R$ 0,00</strong>
+  </button>
+
+  <!-- Item -->
+  <dialog class="folha" id="dlg-item" aria-labelledby="item-nome">
+    <form method="dialog" class="folha__fechar-form"><button class="fechar" aria-label="Fechar">×</button></form>
+    <div class="item-det">
+      <div class="item-det__foto" id="item-foto"></div>
+      <div class="item-det__corpo">
+        <h2 id="item-nome"></h2>
+        <p class="item-det__desc" id="item-desc"></p>
+        <p class="item-det__preco" id="item-preco"></p>
+        <fieldset class="adicionais" id="item-adicionais" hidden>
+          <legend>Adicionais</legend>
+          <div id="item-adicionais-lista"></div>
+        </fieldset>
+        <label class="campo">
+          <span>Alguma observação?</span>
+          <textarea id="item-obs" rows="2" maxlength="140" placeholder="Ex.: sem cebola, ponto da carne…"></textarea>
+        </label>
+      </div>
+    </div>
+    <div class="folha__rodape">
+      <div class="qtd" role="group" aria-label="Quantidade">
+        <button type="button" id="item-menos" aria-label="Diminuir">−</button>
+        <output id="item-qtd">1</output>
+        <button type="button" id="item-mais" aria-label="Aumentar">+</button>
+      </div>
+      <button type="button" class="btn-primario" id="item-add">Adicionar <span id="item-total"></span></button>
+    </div>
+  </dialog>
+
+  <!-- Sacola / finalizar -->
+  <dialog class="folha folha--alta" id="dlg-sacola" aria-labelledby="sacola-titulo">
+    <form method="dialog" class="folha__fechar-form"><button class="fechar" aria-label="Fechar">×</button></form>
+    <div class="sacola">
+      <h2 id="sacola-titulo">Sua sacola</h2>
+      <ul class="linhas" id="linhas"></ul>
+      <button type="button" class="link" id="continuar">+ Adicionar mais itens</button>
+
+      <form id="form-pedido" novalidate>
+        <div class="seg" role="radiogroup" aria-label="Como você quer receber" id="modo"></div>
+
+        <div id="bloco-entrega">
+          <label class="campo" id="campo-bairro" hidden>
+            <span>Bairro</span>
+            <select id="bairro" name="bairro"></select>
+          </label>
+          <label class="campo">
+            <span>Rua e número</span>
+            <input id="endereco" name="endereco" autocomplete="street-address" placeholder="Rua, número">
+          </label>
+          <label class="campo">
+            <span>Complemento / referência <em>(opcional)</em></span>
+            <input id="complemento" name="complemento" placeholder="Apto, bloco, perto de…">
+          </label>
+        </div>
+        <p class="aviso" id="info-retirada" hidden></p>
+
+        <label class="campo">
+          <span>Seu nome</span>
+          <input id="cliente" name="cliente" autocomplete="name" placeholder="Como te chamamos?">
+        </label>
+
+        <fieldset class="campo">
+          <legend>Pagamento</legend>
+          <div class="pagamentos" id="pagamentos"></div>
+        </fieldset>
+        <label class="campo" id="campo-troco" hidden>
+          <span>Troco para quanto? <em>(opcional)</em></span>
+          <input id="troco" name="troco" inputmode="decimal" placeholder="Ex.: 100">
+        </label>
+
+        <label class="campo">
+          <span>Observação do pedido <em>(opcional)</em></span>
+          <textarea id="obs-pedido" rows="2" maxlength="200"></textarea>
+        </label>
+
+        <dl class="totais" id="totais"></dl>
+        <p class="erro" id="erro" role="alert" hidden></p>
+        <p class="aviso" id="aviso-fechado" hidden></p>
+        <button type="submit" class="btn-primario btn-zap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+          Enviar pedido pelo WhatsApp
+        </button>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
